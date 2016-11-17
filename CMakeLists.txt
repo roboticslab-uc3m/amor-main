@@ -57,6 +57,7 @@ SET(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 
 # Define subdirectories.
 ADD_SUBDIRECTORY("libraries")
+ADD_SUBDIRECTORY("programs")
 
 # Export variables.
 SET(AMOR_MAIN_LINK_DIRS ${AMOR_MAIN_LINK_DIRS} "${LIBRARY_OUTPUT_PATH}")
