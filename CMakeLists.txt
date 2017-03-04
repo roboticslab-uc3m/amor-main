@@ -5,11 +5,13 @@ PROJECT(AMOR)
 
 ### options: cpp libraries
 OPTION(ENABLE_AmorYarp "Choose if you want to compile AmorYarp" TRUE)
+OPTION(ENABLE_CartesianServerLib "Choose if you want to compile CartesianServerLib" TRUE)
+OPTION(ENABLE_cartesianServer "Choose if you want to compile CartesianServer" TRUE)
 
 ### options: force default
-OPTION(ENABLE_AmorYarp_BasicCartesianControl "Enable/disable compilation of AmorYarp_BasicCartesianControl" TRUE)
-OPTION(ENABLE_AmorYarp_CartesianControlServer "Enable/disable compilation of AmorYarp_CartesianControlServer" TRUE)
-OPTION(ENABLE_AmorYarp_CartesianControlClient "Enable/disable compilation of AmorYarp_CartesianControlClient" TRUE)
+#OPTION(ENABLE_AmorYarp_BasicCartesianControl "Enable/disable compilation of AmorYarp_BasicCartesianControl" TRUE)
+#OPTION(ENABLE_AmorYarp_CartesianControlServer "Enable/disable compilation of AmorYarp_CartesianControlServer" TRUE)
+#OPTION(ENABLE_AmorYarp_CartesianControlClient "Enable/disable compilation of AmorYarp_CartesianControlClient" TRUE)
 
 # ColorDebug options.
 OPTION(ColorDebug_FULL_FILE "Choose if you want to compile with CD_FULL_FILE" FALSE)

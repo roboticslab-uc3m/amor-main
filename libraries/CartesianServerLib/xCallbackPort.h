@@ -17,7 +17,7 @@
 #include <yarp/sig/Matrix.h>
 #include <yarp/math/Math.h>
 
-#include "TinyMath.hpp"
+//#include "TinyMath.hpp"
 
 #define VPOINT_DIST 0.05  // [m]
 

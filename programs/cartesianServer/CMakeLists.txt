@@ -27,8 +27,9 @@ link_directories(${AMOR_MAIN_LINK_DIRS})
 
 # Set up our main executable.
 if (folder_source)
+  message(STATUS "test!")
   add_executable(${KEYWORD} ${folder_source} ${folder_header})
-  target_link_libraries(${KEYWORD} ${YARP_LIBRARIES} CartesianServerLib)
+  target_link_libraries(${KEYWORD} ${YARP_LIBRARIES} ${AMOR_MAIN_LIBRARIES} AmorYarp)
   install(TARGETS ${KEYWORD} DESTINATION bin)
 else (folder_source)
   message(FATAL_ERROR "No source code files found. Please add something")

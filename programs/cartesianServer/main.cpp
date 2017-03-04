@@ -110,11 +110,11 @@ Response: (0.0 0.0 1.4 0.0 0.0) [ok]
 using namespace yarp::os;
 using namespace yarp::dev;
 
-YARP_DECLARE_PLUGINS(RlPlugins);
+YARP_DECLARE_PLUGINS(AmorYarp);
 
 int main(int argc, char *argv[]) {
 
-    YARP_REGISTER_PLUGINS(RlPlugins);
+    YARP_REGISTER_PLUGINS(AmorYarp);
 
     ResourceFinder rf;
     rf.setVerbose(true);
