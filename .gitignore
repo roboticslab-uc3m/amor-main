@@ -30,5 +30,5 @@
 
 # Other
 **/build*/
-*.project
-*.cproject
+.project
+.cproject
