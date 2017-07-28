@@ -18,7 +18,8 @@ SensorDataProcessor.new = function(self, processor)
         accumulator = "",
         dataReady = false,
         currentSensorData = nil,
-        processor = processor
+        processor = processor,
+        stamp = 0
     }
 
     setmetatable(obj, self)
@@ -47,8 +48,18 @@ SensorDataProcessor.tryConsume = function(self)
 
         if self.currentSensorData then
             self.dataReady = true
+            self.stamp = self.stamp + 1
         end
     end
+end
+
+--
+-- Get current stamp (incremented after data is ready on each iteration).
+--
+-- @return Number
+--
+SensorDataProcessor.getStamp = function(self)
+    return self.stamp
 end
 
 --
@@ -309,7 +320,7 @@ end
 -- @return Things
 --
 PortMonitor.update = function(thing)
-    print("in update")
+    print(string.format("in update [%d]", sensorDataProcessor:getStamp()))
     sensorDataProcessor.dataReady = false
     local vec = yarp.Vector()
 
