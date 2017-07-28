@@ -107,32 +107,48 @@ local createMeanProcessor = function(properties)
     --
     local preprocessMessages = function(lines)
         local temp = {}
-        local n = 0
+        local i = 1
         local nparts, nsubparts = #properties.parts, #properties.subparts
-        if #lines ~= nparts * (nsubparts + 1) then return end
 
-        for i = 1, #properties.parts do
-            n = n + 1
-            local ttemp = {}
-            table.insert(ttemp, lines[n])
+        if #lines < nparts * (nsubparts + 1) then return end
 
-            for j = 1, #properties.subparts do
-                n = n + 1
-                table.insert(ttemp, lines[n])
+        -- always assume the following order:
+        --  part {I, J, K}
+        --  subpart X
+        --  subpart Y
+        --  subpart Z
+        while i <= #lines do
+            local ttemp = {} -- part + 3 subparts
+            table.insert(ttemp, lines[i])
+            i = i + 1
+
+            for j = 1, nsubparts do
+                table.insert(ttemp, lines[i])
+                i = i + 1
             end
             
             table.insert(temp, ttemp)
         end
 
+        -- sort alphabetically by first element, i.e. the part ("I", "J", "K")
         table.sort(temp, function(a, b)
             return a[1] < b[1]
         end)
 
+        -- clear original table
         for i, v in ipairs(lines) do lines[i] = nil end
 
-        for i, part in ipairs(temp) do
-            for j, subpart in ipairs(part) do
-                table.insert(lines, subpart)
+        -- fill with correct sequence of parts and subparts, one level of depth
+        -- remove duplicate parts: https://stackoverflow.com/a/12397571
+        i = 1
+        while i <= #temp do
+            if i ~= 1 and temp[i][1] == temp[i - 1][1] then
+                table.remove(temp, i)
+            else
+                for j, group in ipairs(temp[i]) do
+                    table.insert(lines, group)
+                end
+                i = i + 1
             end
         end
     end
