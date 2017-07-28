@@ -3,6 +3,13 @@ require("yarp")
 
 local SensorDataProcessor = {}
 
+--
+-- Creates a SensorDataProcessor instance.
+--
+-- @param processor Table of input parameters
+--
+-- @return SensorDataProcessor
+--
 SensorDataProcessor.new = function(self, processor)
     local obj = {
         accumulator = "",
@@ -16,12 +23,21 @@ SensorDataProcessor.new = function(self, processor)
     return obj
 end
 
+--
+-- Consumes fetched data from sensors.
+--
+-- @param str String of new data to be appended to the accumulator
+--
 SensorDataProcessor.accept = function(self, str)
     str = str or ""
     self.accumulator = self.accumulator .. str
     self:tryConsume()
 end
 
+--
+-- Calls further processing methods if conditions are satisfied,
+-- sets flag if data is ready to be forwarded to receiver.
+--
 SensorDataProcessor.tryConsume = function(self)
     if self.processor.evaluateCondition(self.accumulator) then
         self.currentSensorData, self.accumulator = self.processor.process(self.accumulator)
@@ -32,11 +48,32 @@ SensorDataProcessor.tryConsume = function(self)
     end
 end
 
+--
+-- Factory function, creates a mean SensorDataProcessor.
+--
+-- @param properties Table of input parameters
+-- @param properties.parts String identifier for main data streams (arm, elbow, hand)
+-- @param properties.subparts String identifier for secondary data streams (X, Y, Z)
+-- @param properties.hexValues Number of hexadecimal values contained in a single data stream
+-- @param properties.hexSize Number of characters a hexValue is comprised of
+--
+-- @return Table of output parameters
+-- @return Table.evaluateCondition Function, see docs below
+-- @return Table.process Function, see docs below
+--
 local createMeanProcessor = function(properties)
+    -- identifier for invalid input values
     local invalidValue = tonumber(string.rep("F", properties.hexSize), 16)
     --local separators = {"\r\n", "\n", "\r"}
     --local storage = {}
 
+    --
+    -- Splits input into lines.
+    --
+    -- @param str String of raw data, contains newline characters.
+    --
+    -- @return Table
+    --
     local extractMessages = function(str)
         local lines = {}
 
@@ -47,6 +84,11 @@ local createMeanProcessor = function(properties)
         return lines
     end
 
+    --
+    -- Groups (by part/subpart) and sorts input data table.
+    --
+    -- @param lines Table of full message data (parts + subparts)
+    --
     local preprocessMessages = function(lines)
         local temp = {}
         local n = 0
@@ -79,6 +121,14 @@ local createMeanProcessor = function(properties)
         end
     end
 
+    --
+    -- Tokenizes input string into elements of constant width.
+    --
+    -- @param str input String
+    -- @param n Number of characters each token is comprised of
+    --
+    -- @return Table of split tokens
+    --
     local splitString = function(str, n)
         n = math.floor(n or 0)
         if n <= 0 then return {""} end
@@ -92,6 +142,13 @@ local createMeanProcessor = function(properties)
         return t
     end
 
+    --
+    -- Calculates arithmetic mean of input data.
+    --
+    -- @param varargs of input Numbers
+    --
+    -- @return Number as arithmetic mean of input data
+    --
     local calculateMean = function(...)
         if arg.n == 0 then return 0 end
         local sum = 0
@@ -103,6 +160,13 @@ local createMeanProcessor = function(properties)
         return math.floor(sum / arg.n)
     end
 
+    --
+    -- Extracts sensor value from sanitized streams and applies selected algorithm.
+    --
+    -- @param Table of preprocessed message Strings.
+    --
+    -- @return Table
+    --
     local doWork = function(lines)
         local nline = 0
         local storage = {}
@@ -145,12 +209,28 @@ local createMeanProcessor = function(properties)
         return storage
     end
 
+    --
+    -- Tests whether provided string represents a complete stream of data (all parts and subparts).
+    --
+    -- @param str Input String
+    --
+    -- @return Boolean
+    --
     local evaluateCondition = function(str)
         local id = properties.parts[1]
         local n = str:find(id, 1, true)
         return n and str:find(id, n + 1, true) ~= nil or false
     end
 
+    --
+    -- Main execution block, processes raw data.
+    --
+    -- @param str String of raw data accumulated by the processor in previous iterations
+    --
+    -- @return Table
+    -- @return Table[1] Table of parsed messages
+    -- @return Table[2] String of accumulated data by this iteration
+    --
     local process = function(str)
         local id = properties.parts[1]
         local first = str:find(id, 1, true)
@@ -170,7 +250,10 @@ end
 local sensorDataProcessor
 
 --
--- create is called when the port monitor is created
+-- Method called when the port monitor is created.
+--
+-- @param options
+--
 -- @return Boolean
 --
 PortMonitor.create = function(options)
@@ -187,7 +270,7 @@ PortMonitor.create = function(options)
 end
 
 --
--- destroy is called when port monitor is destroyed
+-- Method called when port monitor is destroyed.
 --
 PortMonitor.destroy = function()
     print("DESTROYING PORT MONITOR")
@@ -195,11 +278,13 @@ PortMonitor.destroy = function()
 end
 
 --
--- accept is called when the port receives new data
+-- Method called when the port receives new data.
+-- If false is returned, the data will be ignored
+-- and update() will never be called.
+--
 -- @param thing The Things abstract data type
+--
 -- @return Boolean
--- if false is returned, the data will be ignored
--- and update() will never be called
 --
 PortMonitor.accept = function(thing)
     bt = thing:asBottle()
@@ -214,8 +299,10 @@ PortMonitor.accept = function(thing)
 end
 
 --
--- update is called when the port receives new data
+-- Method called to forward processed data.
+--
 -- @param thing The Things abstract data type
+--
 -- @return Things
 --
 PortMonitor.update = function(thing)
