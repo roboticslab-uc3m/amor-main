@@ -126,7 +126,7 @@ local createMeanProcessor = function(properties)
                 table.insert(ttemp, lines[i])
                 i = i + 1
             end
-            
+
             table.insert(temp, ttemp)
         end
 
@@ -244,14 +244,85 @@ local createMeanProcessor = function(properties)
     --
     -- Tests whether provided string represents a complete stream of data (all parts and subparts).
     --
-    -- @param str Input String
+    -- @param str input String
     --
     -- @return Boolean
     --
     local evaluateCondition = function(str)
-        local id = properties.parts[1]
-        local n = str:find(id, 1, true)
-        return n and str:find(id, n + 1, true) ~= nil or false
+        local temp = {}
+        local occurrences = 0
+        local singleOccurrenceParts = {}
+
+        for i, id in ipairs(properties.parts) do
+            local j = 1
+
+            -- find all occurrences of part 'id'
+            while j <= str:len() do
+                local n
+                n, j = str:find(id, j, true)
+
+                -- no more occurrences, exit loop
+                if not n then break end
+
+                -- store index in associative array for given part
+                local t = temp[id] or {}
+                table.insert(t, n)
+                temp[id] = t
+
+                j = j + 1
+            end
+
+            -- a part identifier is missing
+            if not temp[id] then return false end
+
+            -- if this part has a single occurrence, store its id
+            if #temp[id] == 1 then
+                table.insert(singleOccurrenceParts, id)
+            end
+
+            occurrences = occurrences + #temp[id]
+        end
+
+        -- must have at least nº of parts + 1
+        if not (occurrences > #properties.parts) then return false end
+
+        local lastOccurrencePos = 0
+
+        -- find position of last occurrence
+        for id, ocs in pairs(temp) do
+            for j, n in ipairs(ocs) do
+                if n > lastOccurrencePos then lastOccurrencePos = n end
+            end
+        end
+
+        -- make sure that a part with a single occurrence is not last
+        for i, id in ipairs(singleOccurrenceParts) do
+            if temp[id][1] == lastOccurrencePos then return false end
+        end
+
+        return true
+    end
+
+    --
+    -- Extract the biggest chunk of text containing full part frames.
+    --
+    -- @param str input string
+    --
+    -- @return desired String chunk
+    -- @return rightmost remainder String chunk
+    --
+    local extractSubstring = function(str)
+        local first, last = str:len(), str:len()
+
+        for i, part in ipairs(properties.parts) do
+            local f = str:find(part, 1, true)
+            if f < first then first = f end
+            local l = str:reverse():find(part, 1, true)
+            if l < last then last = l end
+        end
+
+        last = str:len() - last
+        return str:sub(first, last), str:sub(last + 1)
     end
 
     --
@@ -259,18 +330,14 @@ local createMeanProcessor = function(properties)
     --
     -- @param str String of raw data accumulated by the processor in previous iterations
     --
-    -- @return Table
-    -- @return Table[1] Table of parsed messages
-    -- @return Table[2] String of unprocessed data left by this iteration
+    -- @return Table of parsed messages
+    -- @return String of unprocessed data left by this iteration
     --
     local process = function(str)
-        local id = properties.parts[1]
-        local first = str:find(id, 1, true)
-        local second = str:find(id, first + 1, true)
-        local substring = str:sub(first, second - 1)
+        local substring, remainder = extractSubstring(str)
         local lines = extractMessages(substring)
         preprocessMessages(lines)
-        return doWork(lines), str:sub(second)
+        return doWork(lines), remainder
     end
 
     return {
