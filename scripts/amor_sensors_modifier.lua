@@ -153,14 +153,14 @@ local createMeanProcessor = function(properties)
     -- @return Number as arithmetic mean of input data
     --
     local calculateMean = function(...)
-        if arg.n == 0 then return 0 end
+        if select('#', ...) == 0 then return 0 end
         local sum = 0
 
-        for i, value in ipairs(arg) do
+        for i, value in ipairs({...}) do
             sum = sum + value
         end
 
-        return math.floor(sum / arg.n)
+        return math.floor(sum / select('#', ...))
     end
 
     --
