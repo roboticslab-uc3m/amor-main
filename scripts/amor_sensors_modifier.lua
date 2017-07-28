@@ -1,6 +1,9 @@
 -- loading lua-yarp binding library
 require("yarp")
 
+-- Lua 5.2 lacks a global 'unpack' function
+local unpack = table.unpack or unpack
+
 local SensorDataProcessor = {}
 
 --
