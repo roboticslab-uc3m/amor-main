@@ -49,6 +49,8 @@ SensorDataProcessor.tryConsume = function(self)
         if self.currentSensorData then
             self.dataReady = true
             self.stamp = self.stamp + 1
+        else
+            print("message dropped")
         end
     end
 end
@@ -179,7 +181,7 @@ local createMeanProcessor = function(properties)
     --
     -- @param Table of preprocessed message Strings.
     --
-    -- @return Table
+    -- @return Table on success, nil on failure
     --
     local doWork = function(lines)
         local nline = 0
@@ -243,7 +245,7 @@ local createMeanProcessor = function(properties)
     --
     -- @return Table
     -- @return Table[1] Table of parsed messages
-    -- @return Table[2] String of accumulated data by this iteration
+    -- @return Table[2] String of unprocessed data left by this iteration
     --
     local process = function(str)
         local id = properties.parts[1]
