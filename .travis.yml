@@ -1,0 +1,49 @@
+language: cpp
+dist: trusty
+sudo: required
+os: linux
+
+compiler:
+  - gcc
+  - clang
+
+before_install:
+  - sudo apt-get -qq update
+
+  #-- Configure Git (needed by YCM)
+  - if [ ! `git config --get user.email` ]; then `git config --global user.email 'user@example.com'`; fi
+  - if [ ! `git config --get user.name` ]; then `git config --global user.name 'Travis CI'`; fi
+
+install:
+  #-- Install AMOR API deps
+  - sudo apt install libeigen3-dev libboost-dev
+
+  #-- Install YARP and KDL deps
+  #- sudo apt install libeigen3-dev # Needed for creating YARP lib_math, already installed for AMOR API
+
+  #-- Install OpenRAVE deps
+  - sudo apt install libboost-all-dev
+  - sudo apt install libqt4-dev qt4-dev-tools libxml2-dev libode-dev # libfcl-dev not on Trusty used in this travis
+  - sudo apt install libsoqt4-dev libcoin80-dev
+
+  #-- Install OpenCV
+  - sudo apt install libopencv-dev
+
+  #-- Install PCL
+  ##- sudo add-apt-repository --yes ppa:v-launchpad-jochen-sprickerhof-de/pcl
+  ##- sudo apt-get -qq update
+  ##- sudo apt-get install libpcl-all libpcl-all-dev
+
+  #-- Install ROBOTICSLAB deps
+  - sudo apt install libspnav-dev libxwiimote-dev
+
+before_script:
+  - mkdir build && cd "$_"
+  - cmake ..
+
+script:
+  - make
+
+after_success:
+  - sudo make install
+  - sudo make uninstall
