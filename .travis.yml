@@ -43,7 +43,7 @@ install:
 
 before_script:
   - mkdir build && cd "$_"
-  - cmake ..
+  - cmake .. -DYCM_GIT_GITHUB_BASE_ADDRESS="git@github.com:"
 
 script:
   - make
