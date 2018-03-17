@@ -27,3 +27,9 @@
 *.exe
 *.out
 *.app
+
+# Other
+**/build*/
+/external/
+/.project
+/.cproject
