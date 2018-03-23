@@ -4,7 +4,66 @@ require("yarp")
 -- Lua 5.2 lacks a global 'unpack' function
 local unpack = table.unpack or unpack
 
+-- Globals
+local NUMBER_OF_PREVIOUS_ITERATIONS = 5
+local FILTER_FACTOR = 5
+
 local SensorDataProcessor = {}
+
+--
+-- Performs a deep copy of provided table (only table children, no metadata).
+-- From http://lua-users.org/wiki/CopyTable
+--
+-- @param target source Table
+--
+-- @return cloned Table
+--
+function cloneTable(target)
+    local target_type = type(target)
+    local copy
+    if target_type == 'table' then
+        copy = {}
+        for target_key, target_value in next, target, nil do
+            copy[cloneTable(target_key)] = cloneTable(target_value)
+        end
+    else -- number, string, boolean, etc
+        copy = target
+    end
+    return copy
+end
+
+--
+-- Filters odd values (peaks) from current data set.
+-- Current implementation: discard data if current and previous iterations
+-- exceed initial value by a constant factor.
+--
+-- @param reference Table of sensor data for previous iteration
+--
+function filterPeaks(references, currentData)
+    local hasPeak = function(ref, tgt)
+        return tgt > ref * FILTER_FACTOR
+    end
+
+    local refIter = references[1]
+
+    for i, part in ipairs(currentData) do
+        for j, decValue in ipairs(part) do
+            local ref = refIter[i][j]
+
+            if hasPeak(ref, decValue) then
+                local recurrentPeak = true
+
+                for k = 2, #references do
+                    recurrentPeak = recurrentPeak and hasPeak(ref, references[k][i][j])
+                end
+
+                if not recurrentPeak then
+                    part[j] = ref
+                end
+            end
+        end
+    end
+end
 
 --
 -- Creates a SensorDataProcessor instance.
@@ -19,7 +78,8 @@ SensorDataProcessor.new = function(self, processor)
         dataReady = false,
         currentSensorData = nil,
         processor = processor,
-        stamp = 0
+        stamp = 0,
+        previousIterations = {}
     }
 
     setmetatable(obj, self)
@@ -47,8 +107,16 @@ SensorDataProcessor.tryConsume = function(self)
         self.currentSensorData, self.accumulator = self.processor.process(self.accumulator)
 
         if self.currentSensorData then
+            -- TODO: users may want to disable or use other filter
+            if #self.previousIterations == NUMBER_OF_PREVIOUS_ITERATIONS then
+                filterPeaks(self.previousIterations, self.currentSensorData)
+                table.remove(self.previousIterations, 1)
+            end
+
             self.dataReady = true
             self.stamp = self.stamp + 1
+
+            table.insert(self.previousIterations, cloneTable(self.currentSensorData))
         else
             print("message dropped")
         end
