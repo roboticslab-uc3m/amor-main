@@ -30,8 +30,5 @@ file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/install)
 install(DIRECTORY ${CMAKE_BINARY_DIR}/install/
         DESTINATION ${CMAKE_INSTALL_PREFIX})
 
-# Add main contents.
-#add_subdirectory(share)
-
 # Configure and create uninstall target.
 include(AddUninstallTarget)
