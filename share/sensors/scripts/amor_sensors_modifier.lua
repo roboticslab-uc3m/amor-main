@@ -4,6 +4,10 @@ require("yarp")
 -- Lua 5.2 lacks a global 'unpack' function
 local unpack = table.unpack or unpack
 
+-- Globals
+local NUMBER_OF_PREVIOUS_ITERATIONS = 5
+local FILTER_FACTOR = 5
+
 local SensorDataProcessor = {}
 
 --
@@ -37,7 +41,7 @@ end
 --
 function filterPeaks(references, currentData)
     local hasPeak = function(ref, tgt)
-        return tgt > ref * 5
+        return tgt > ref * FILTER_FACTOR
     end
 
     local refIter = references[1]
@@ -103,7 +107,8 @@ SensorDataProcessor.tryConsume = function(self)
         self.currentSensorData, self.accumulator = self.processor.process(self.accumulator)
 
         if self.currentSensorData then
-            if #self.previousIterations == 5 then
+            -- TODO: users may want to disable or use other filter
+            if #self.previousIterations == NUMBER_OF_PREVIOUS_ITERATIONS then
                 filterPeaks(self.previousIterations, self.currentSensorData)
                 table.remove(self.previousIterations, 1)
             end
