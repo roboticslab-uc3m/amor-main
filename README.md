@@ -4,7 +4,7 @@
 ![Travis branch (develop)](https://img.shields.io/travis/roboticslab-uc3m/amor-main/master.svg?label=develop)
 [![Issues](https://img.shields.io/github/issues/roboticslab-uc3m/amor-main.svg?label=issues)](https://github.com/roboticslab-uc3m/amor-main/issues)
 
-A super/meta repository for the AMOR assistive robot.
+AMOR assistive robot: super/meta repository.
 
 ## Installation
 
