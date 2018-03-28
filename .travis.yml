@@ -28,7 +28,7 @@ before_install:
 
 install:
   #-- Install AMOR API deps (already covered in following sections)
-  #- sudo apt-get install libeigen3-dev libboost-dev
+  #- sudo apt-get install libeigen3-dev libboost-thread-dev
 
   #-- Install YARP and KDL deps
   - sudo apt-get install libeigen3-dev # Needed for creating YARP lib_math
