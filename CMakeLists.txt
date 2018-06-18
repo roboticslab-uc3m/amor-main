@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
-project(AMOR_MAIN)
+project(AMOR_MAIN LANGUAGES NONE)
 
 # Pick up our CMake modules.
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake
                               ${CMAKE_SOURCE_DIR}/cmake/ycm-modules)
+
+# Uses YCM's unmerged ExternalProject.cmake module, which handles an
+# additional CONFIGURE_SOURCE_DIR option (see Buildorocos_kdl.cmake).
+set(YCM_USE_CMAKE_PROPOSED ON)
 
 # Bootstrap YCM. Keep it compatible with cmake_minimum_required().
 include(YCMBootstrap)
@@ -29,9 +33,6 @@ file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/install)
 # Install downloaded packages.
 install(DIRECTORY ${CMAKE_BINARY_DIR}/install/
         DESTINATION ${CMAKE_INSTALL_PREFIX})
-
-# Add main contents.
-#add_subdirectory(share)
 
 # Configure and create uninstall target.
 include(AddUninstallTarget)

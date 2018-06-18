@@ -1,6 +1,10 @@
-[![Amor-main Homepage](https://img.shields.io/badge/amor-main-orange.svg)](http://www.amorrobot.com) [![Latest Release](https://img.shields.io/github/release/roboticslab-uc3m/amor-main.svg?label=Latest%20Release)](https://github.com/roboticslab-uc3m/amor-main/tags)
+[![Amor-main Homepage](https://img.shields.io/badge/amor-main-orange.svg)](http://www.amorrobot.com)
+[![Latest Release](https://img.shields.io/github/release/roboticslab-uc3m/amor-main.svg?label=latest%20release)](https://github.com/roboticslab-uc3m/amor-main/tags)
+![Travis branch (master)](https://img.shields.io/travis/roboticslab-uc3m/amor-main/master.svg?label=master)
+![Travis branch (develop)](https://img.shields.io/travis/roboticslab-uc3m/amor-main/master.svg?label=develop)
+[![Issues](https://img.shields.io/github/issues/roboticslab-uc3m/amor-main.svg?label=issues)](https://github.com/roboticslab-uc3m/amor-main/issues)
 
-A potential super/meta repository for the AMOR assistive robot.
+AMOR assistive robot: super/meta repository.
 
 ## Installation
 
@@ -20,9 +24,3 @@ Installation instructions for installing from source can be found [here](doc/amo
 3. Commit your changes
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
-
-## Status
-
-[![Build Status (Linux/OSX)](https://travis-ci.org/roboticslab-uc3m/amor-main.svg?branch=develop)](https://travis-ci.org/roboticslab-uc3m/amor-main)
-
-[![Issues](https://img.shields.io/github/issues/roboticslab-uc3m/amor-main.svg?label=Issues)](https://github.com/roboticslab-uc3m/amor-main/issues)
