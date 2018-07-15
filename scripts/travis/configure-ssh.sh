@@ -8,7 +8,7 @@ set -e
 
 mkdir -p ~/.ssh
 
-echo $DEPLOY_KEY_AMOR_API | base64 --decode | openssl aes-256-cbc -K $encrypted_9c9995b5c6b2_key -iv $encrypted_9c9995b5c6b2_iv -out ~/.ssh/id_rsa -d
+echo $DEPLOY_KEY_AMOR_API | base64 --decode | openssl aes-256-cbc -K $encrypted_7783b7b455a9_key -iv $encrypted_7783b7b455a9_iv -out ~/.ssh/id_rsa -d
 
 chmod 600 ~/.ssh/id_rsa
 
