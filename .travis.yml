@@ -29,10 +29,6 @@ addons:
     - libspnav-dev
 
 before_install:
-  #-- Configure Git (needed by YCM)
-  - if [ ! `git config --get user.email` ]; then `git config --global user.email 'user@example.com'`; fi
-  - if [ ! `git config --get user.name` ]; then `git config --global user.name 'Travis CI'`; fi
-
   #-- Register SSH deploy key for AMOR API private repository
   - source "$TRAVIS_BUILD_DIR/scripts/travis/configure-ssh.sh"
 
@@ -49,7 +45,7 @@ install:
 
 before_script:
   - mkdir build && cd "$_"
-  - cmake .. -DCMAKE_INSTALL_PREFIX="$PWD/install-system" -DYCM_GIT_GITHUB_BASE_ADDRESS="git@github.com:"
+  - cmake .. -DCMAKE_INSTALL_PREFIX="$PWD/install-system" -DNON_INTERACTIVE_BUILD=ON -DYCM_GIT_GITHUB_BASE_ADDRESS="git@github.com:"
 
 script:
   - make install
