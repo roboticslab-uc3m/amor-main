@@ -1,6 +1,6 @@
 language: cpp
-dist: xenial
-os: bionic
+dist: bionic
+os: linux
 
 compiler:
   - gcc
@@ -32,7 +32,6 @@ addons:
     # ROBOTICSLAB
     - libopencv-dev
     - libpcl-dev
-    - libproj-dev # needed by libpcl-dev on Xenial (known bug)
     - libspnav-dev
     - libxwiimote-dev
 
