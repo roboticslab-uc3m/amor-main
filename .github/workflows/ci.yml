@@ -35,13 +35,15 @@ jobs:
     - name: Set up Ccache
       uses: hendrikmuhs/ccache-action@v1
 
+    - name: Set environment variables
+      run: |
+        echo "CFLAGS=-w" >> $GITHUB_ENV
+        echo "CXXFLAGS=-w" >> $GITHUB_ENV
+        echo "CMAKE_C_COMPILER_LAUNCHER=ccache" >> $GITHUB_ENV
+        echo "CMAKE_CXX_COMPILER_LAUNCHER=ccache" >> $GITHUB_ENV
+
     - name: Configure amor-main
-      env:
-        CFLAGS: -w
-        CXXFLAGS: -w
-        CMAKE_C_COMPILER_LAUNCHER: ccache
-        CMAKE_CXX_COMPILER_LAUNCHER: ccache
-      run: cmake -S . -B build -DCMAKE_INSTALL_PREFIX="$PWD/build/install-system" -DNON_INTERACTIVE_BUILD=ON -DYCM_GIT_GITHUB_BASE_ADDRESS="git@github.com:"
+      run: cmake -S . -B build -DCMAKE_INSTALL_PREFIX="$PWD/build/install-system" -DNON_INTERACTIVE_BUILD=ON -DYCM_GIT_GITHUB_BASE_ADDRESS="https://roboticslab-uc3m:${{secrets.AMOR_API}}@github.com/"
 
     - name: Build amor-main
       run: cmake --build build
