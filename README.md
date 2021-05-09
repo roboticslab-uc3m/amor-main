@@ -1,6 +1,6 @@
 [![Amor-main Homepage](https://img.shields.io/badge/amor-main-orange.svg)](http://www.amorrobot.com)
 [![Latest Release](https://img.shields.io/github/release/roboticslab-uc3m/amor-main.svg?label=latest%20release)](https://github.com/roboticslab-uc3m/amor-main/tags)
-![Travis branch (master)](https://img.shields.io/travis/roboticslab-uc3m/amor-main/master.svg?label=master)
+[![CI (Linux)](https://github.com/roboticslab-uc3m/amor-main/workflows/Continuous%20Integration/badge.svg)](https://github.com/roboticslab-uc3m/amor-main/actions)
 [![Issues](https://img.shields.io/github/issues/roboticslab-uc3m/amor-main.svg?label=issues)](https://github.com/roboticslab-uc3m/amor-main/issues)
 
 AMOR assistive robot: super/meta repository.
