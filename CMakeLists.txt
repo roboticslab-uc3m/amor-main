@@ -19,6 +19,7 @@ include(FindOrBuildPackage)
 
 # Pull remote packages if not found on system.
 find_or_build_package(AMOR_API)
+find_or_build_package(AMOR_YARP_DEVICES)
 find_or_build_package(AMOR_CONFIGURATION_FILES)
 find_or_build_package(AMOR_OPENRAVE_MODELS)
 find_or_build_package(ROBOTICSLAB_DEVELOPER_MANUAL)

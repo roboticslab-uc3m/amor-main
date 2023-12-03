@@ -6,6 +6,7 @@ First install the dependencies:
 Additionally, this project depends on YCM to download and build external packages. Although this process is intended to run automatically during the CMake configuration phase, you may still want to install YCM and said packages by yourself. In that respect, refer to [Install YCM](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-ycm.md) and to the installation guides of any package listed below:
 
 - [amor-api](https://github.com/roboticslab-uc3m/amor-api) (private)
+- [amor-yarp-devices](https://github.com/roboticslab-uc3m/amor-yarp-devices)
 - [amor-configuration-files](https://github.com/roboticslab-uc3m/amor-configuration-files)
 - [amor-openrave-models](https://github.com/roboticslab-uc3m/amor-openrave-models)
 - [developer-manual](https://github.com/roboticslab-uc3m/developer-manual)
